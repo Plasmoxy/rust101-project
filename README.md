@@ -23,7 +23,7 @@ We would like to implement an GUI/server application using various technologies,
 
 ## Possible dependencies:
 - Tauri - web frontend / rust backend - framework for GUI
-- Rocket - backend framework
+- Rocket or Axum https://github.com/tokio-rs/axum - backend framework
 - Tokio - for concurrency with rocket.rs
 - Rayon - for (possible) parallelisation of our image procesing functionality
 - Tensorflow - loading and inference of a face recognition DL model, or possibly even Tract (learn to leverage vast ecosystem of universal ONNX DL model inference)
