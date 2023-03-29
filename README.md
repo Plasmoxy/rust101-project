@@ -26,6 +26,6 @@ We would like to implement an GUI/server application using various technologies,
 - Rocket - backend framework
 - Tokio - for concurrency with rocket.rs
 - Rayon - for (possible) parallelisation of our image procesing functionality
-- Tensorflow - loading and using a face recognition model
+- Tensorflow - loading and inference of a face recognition DL model, or possibly even Tract (learn to leverage vast ecosystem of universal ONNX DL model inference)
 - Nokhwa - taking a photo with a camera
 
