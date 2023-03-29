@@ -2,6 +2,8 @@ This repository contains code and documentation for Rust 101 project - Sebastian
 
 # Project proposal
 
+![out](https://user-images.githubusercontent.com/31391787/228638774-5de3e49c-0058-4f22-b1c6-9b8f4413c94f.jpg)
+
 We would like to implement an GUI/server application using various technologies, focusing mainly on image manipulation including cropping, inverting, detecting faces, taking images from camera and other interesting features that'll come to our minds.
 
 ## We hope to explore/learn:
