@@ -11,7 +11,7 @@ use neural::NeuralInferrer;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let inferrer = NeuralInferrer::new().await;
+    // let inferrer = NeuralInferrer::new().await;
 
     let mut buf = load_image_buffer("girl.jpeg")?;
 
@@ -26,7 +26,8 @@ async fn main() -> anyhow::Result<()> {
 
     let wobble_t = Instant::now();
     // Processing::negative_basic(&mut buf);
-    buf = Processing::crop_image(&buf, 850, 350, 2000, 2000);
+    // buf = Processing::crop_image(&buf, 800, 350, 1700, 2000);
+    buf = Processing::rotate(&buf, 60.0);
     println!("Wobble {:?}", wobble_t.elapsed());
 
     save_image_buffer("data/out.jpg", &buf)?;

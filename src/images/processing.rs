@@ -1,4 +1,5 @@
-use image::{Pixel, RgbImage, Rgba, RgbaImage, ImageBuffer};
+use image::{Pixel, RgbImage, Rgba, RgbaImage, ImageBuffer, Rgb};
+use tract_onnx::WithOnnx;
 use std::cmp::{max, min};
 use rand::Rng;
 use rayon::prelude::*;
@@ -41,6 +42,7 @@ impl Processing {
     }
 
     // `crop_image` takes an image and the dimensions of the desired crop and returns a new image that is the cropped portion of the original image
+    // x, y -> coordinates of the upper left edge of desired cropped rectangle. Width/height represent the width/height of this rectangle.
     pub fn crop_image(img: &RgbImage, x: u32, y: u32, width: u32, height: u32) -> RgbImage {
         // Determine the x-coordinate of the right edge of the crop area
         let x_end = min(x + width, img.width());
@@ -64,5 +66,43 @@ impl Processing {
         cropped_img
     }
 
+    // angle is in degrees
+    pub fn rotate(img: &RgbImage, angle: f32) -> RgbImage {
+        let (orig_width, orig_height) = img.dimensions();
+        let mut rotated_width = orig_width;
+        let mut rotated_height = orig_height;
+
+        // in case the image is rotated on 90 or 270 degrees, 
+        // the width and height will be swaped to remove black borders in the output image
+        if ((angle / 90.0) % 2.0) == 1.0{
+            rotated_width = orig_height;
+            rotated_height = orig_width;
+        }
+
+        let mut rotated = ImageBuffer::new(rotated_width, rotated_height);
+    
+        let sin_a = angle.to_radians().sin();
+        let cos_a = angle.to_radians().cos();
+    
+        let withd_center = orig_width as f32 / 2.0;
+        let height_center = orig_height as f32 / 2.0;
+
+        for x in 0..orig_width {
+            for y in 0..orig_height {
+                // Compute the new position of the pixel in the rotated image 
+                // (rotation formulas were taken from https://homepages.inf.ed.ac.uk/rbf/HIPR2/rotate.htm)
+                let new_x = (cos_a * (x as f32 - withd_center) - sin_a * (y as f32 - height_center) + rotated_width as f32 / 2.0) as u32;
+                let new_y = (sin_a * (x as f32 - withd_center) + cos_a * (y as f32 - height_center) + rotated_height as f32 / 2.0) as u32;
+    
+                if new_x < rotated_width && new_y < rotated_height {
+                    // Copy the pixel from the original image to the rotated image
+                    let pixel = img.get_pixel(x, y);
+                    rotated.put_pixel(new_x, new_y, pixel.to_rgb());
+                }
+            }
+        }
+    
+        rotated
+    }
 
 }
