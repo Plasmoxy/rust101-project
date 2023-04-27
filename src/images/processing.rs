@@ -1,4 +1,5 @@
-use image::{Pixel, RgbImage, Rgba, RgbaImage};
+use image::{Pixel, RgbImage, Rgba, RgbaImage, ImageBuffer};
+use std::cmp::{max, min};
 use rand::Rng;
 use rayon::prelude::*;
 
@@ -38,4 +39,30 @@ impl Processing {
             }
         }
     }
+
+    // `crop_image` takes an image and the dimensions of the desired crop and returns a new image that is the cropped portion of the original image
+    pub fn crop_image(img: &RgbImage, x: u32, y: u32, width: u32, height: u32) -> RgbImage {
+        // Determine the x-coordinate of the right edge of the crop area
+        let x_end = min(x + width, img.width());
+        // Determine the y-coordinate of the bottom edge of the crop area
+        let y_end = min(y + height, img.height());
+        // Create a new image buffer to hold the cropped image
+        let mut cropped_img = ImageBuffer::new(width, height);
+
+        // Iterate over the pixels in the cropped image buffer and copy the corresponding pixels from the original image
+        for (x_cropped, y_cropped, pixel) in cropped_img.enumerate_pixels_mut() {
+            // Determine the corresponding pixel coordinates in the original image
+            let x_original = x + x_cropped;
+            let y_original = y + y_cropped;
+
+            // If the original pixel is within the crop area, copy its value to the cropped image
+            if x_original < x_end && y_original < y_end {
+                *pixel = img.get_pixel(x_original, y_original).to_rgb();
+            }
+        }
+
+        cropped_img
+    }
+
+
 }

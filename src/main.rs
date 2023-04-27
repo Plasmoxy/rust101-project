@@ -15,17 +15,18 @@ async fn main() -> anyhow::Result<()> {
 
     let mut buf = load_image_buffer("girl.jpeg")?;
 
-    let bboxes = inferrer.infer_face(&buf);
-    println!("{:?}", bboxes);
+    // let bboxes = inferrer.infer_face(&buf);
+    // println!("{:?}", bboxes);
 
-    let detected = draw_bboxes_on_image(
-        resize(&buf, buf.width() / 4, buf.height() / 4, image::imageops::FilterType::Triangle),
-        bboxes,
-    );
-    save_image_buffer("data/detected.jpg", &detected)?;
+    // let detected = draw_bboxes_on_image(
+    //     resize(&buf, buf.width() / 4, buf.height() / 4, image::imageops::FilterType::Triangle),
+    //     bboxes,
+    // );
+    // save_image_buffer("data/detected.jpg", &detected)?;
 
     let wobble_t = Instant::now();
-    Processing::wobble(&mut buf);
+    // Processing::negative_basic(&mut buf);
+    buf = Processing::crop_image(&buf, 850, 350, 2000, 2000);
     println!("Wobble {:?}", wobble_t.elapsed());
 
     save_image_buffer("data/out.jpg", &buf)?;
