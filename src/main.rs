@@ -27,7 +27,7 @@ async fn main() -> anyhow::Result<()> {
     let wobble_t = Instant::now();
     // Processing::negative_basic(&mut buf);
     // buf = Processing::crop_image(&buf, 800, 350, 1700, 2000);
-    buf = Processing::rotate(&buf, 60.0);
+    buf = Processing::rotate(&buf, 90.0);
     println!("Wobble {:?}", wobble_t.elapsed());
 
     save_image_buffer("data/out.jpg", &buf)?;

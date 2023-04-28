@@ -84,25 +84,24 @@ impl Processing {
         let sin_a = angle.to_radians().sin();
         let cos_a = angle.to_radians().cos();
     
-        let withd_center = orig_width as f32 / 2.0;
+        let width_center = orig_width as f32 / 2.0;
         let height_center = orig_height as f32 / 2.0;
 
-        for x in 0..orig_width {
-            for y in 0..orig_height {
+        for (x, y, pixel) in img.enumerate_pixels() {
                 // Compute the new position of the pixel in the rotated image 
                 // (rotation formulas were taken from https://homepages.inf.ed.ac.uk/rbf/HIPR2/rotate.htm)
-                let new_x = (cos_a * (x as f32 - withd_center) - sin_a * (y as f32 - height_center) + rotated_width as f32 / 2.0) as u32;
-                let new_y = (sin_a * (x as f32 - withd_center) + cos_a * (y as f32 - height_center) + rotated_height as f32 / 2.0) as u32;
+                let new_x = (cos_a * (x as f32 - width_center) - sin_a * (y as f32 - height_center) + rotated_width as f32 / 2.0) as u32;
+                let new_y = (sin_a * (x as f32 - width_center) + cos_a * (y as f32 - height_center) + rotated_height as f32 / 2.0) as u32;
     
                 if new_x < rotated_width && new_y < rotated_height {
                     // Copy the pixel from the original image to the rotated image
-                    let pixel = img.get_pixel(x, y);
                     rotated.put_pixel(new_x, new_y, pixel.to_rgb());
                 }
-            }
         }
     
         rotated
     }
+
+    
 
 }
