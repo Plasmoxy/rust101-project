@@ -49,7 +49,7 @@ impl Processing {
         // Determine the y-coordinate of the bottom edge of the crop area
         let y_end = min(y + height, img.height());
         // Create a new image buffer to hold the cropped image
-        let mut cropped_img = ImageBuffer::new(width, height);
+        let mut cropped_img = ImageBuffer::new(x_end - x, y_end - y);
 
         // Iterate over the pixels in the cropped image buffer and copy the corresponding pixels from the original image
         for (x_cropped, y_cropped, pixel) in cropped_img.enumerate_pixels_mut() {
