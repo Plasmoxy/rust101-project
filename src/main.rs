@@ -13,7 +13,7 @@ use neural::NeuralInferrer;
 async fn main() -> anyhow::Result<()> {
     // let inferrer = NeuralInferrer::new().await;
 
-    let mut buf = load_image_buffer("girl.jpeg")?;
+    let mut buf = load_image_buffer("./test_data/border_picture.png")?;
 
     // let bboxes = inferrer.infer_face(&buf);
     // println!("{:?}", bboxes);
@@ -27,7 +27,8 @@ async fn main() -> anyhow::Result<()> {
     let wobble_t = Instant::now();
     // Processing::negative_basic(&mut buf);
     // buf = Processing::crop_image(&buf, 800, 350, 1700, 2000);
-    buf = Processing::rotate(&buf, 90.0);
+    // buf = Processing::rotate(&buf, 90.0);
+    buf = Processing::remove_borders(&buf).unwrap();
     println!("Wobble {:?}", wobble_t.elapsed());
 
     save_image_buffer("data/out.jpg", &buf)?;

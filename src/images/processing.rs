@@ -1,6 +1,6 @@
 use image::{Pixel, RgbImage, Rgba, RgbaImage, ImageBuffer, Rgb};
 use tract_onnx::WithOnnx;
-use std::cmp::{max, min};
+use std::{cmp::{max, min}, thread};
 use rand::Rng;
 use rayon::prelude::*;
 
@@ -102,6 +102,113 @@ impl Processing {
         rotated
     }
 
+    fn is_a_shade_of_black(pixel: &Rgb<u8>, threshold: u8) -> bool {
+        pixel[0] <= threshold && pixel[1] <= threshold && pixel[2] <= threshold
+    }
+
+    fn find_top_edge(image: &RgbImage, threshold: u8) -> u32 {
+        let (width, height) = image.dimensions();
+        let mut top = height - 1;
+        for x in 0..width {
+            for y in 0..height {
+                if !Self::is_a_shade_of_black(image.get_pixel(x, y), threshold) && y < top {
+                    top = y;
+                    break;
+                }
+                if y == top {
+                    break;
+                }
+            }
+        }
+
+        top
+    }
+
+    fn find_left_edge(image: &RgbImage, threshold: u8) -> u32 {
+        let (width, height) = image.dimensions();
+        let mut left = width - 1;
+        for y in 0..height {
+            for x in 0..width {
+                if !Self::is_a_shade_of_black(image.get_pixel(x, y), threshold) && x < left {
+                    left = x;
+                    break;
+                }
+                if x == left {
+                    break;
+                }
+            }
+        }
+
+        left
+    }
+
+    fn find_bottom_edge(image: &RgbImage, threshold: u8) -> u32 {
+        let (width, height) = image.dimensions();
+        let mut bottom = 0;
+        for x in 0..width {
+            for y in (0..height).rev() {
+                if !Self::is_a_shade_of_black(image.get_pixel(x, y), threshold) && y > bottom {
+                    bottom = y;
+                    break;
+                }
+                if y == bottom {
+                    break;
+                }
+            }
+        }
+
+        bottom
+    }
+
+    fn find_right_edge(image: &RgbImage, threshold: u8) -> u32 {
+        let (width, height) = image.dimensions();
+        let mut right = 0;
+        for y in 0..height {
+            for x in (0..width).rev() {
+                if !Self::is_a_shade_of_black(image.get_pixel(x, y), threshold) && x > right {
+                    right = x;
+                    break;
+                }
+                if x == right {
+                    break;
+                }
+            }
+        }
+
+        right
+    }
+
+    pub fn remove_borders(image: &RgbImage) -> Result<RgbImage, &'static str> {
+        let threshold = 40;
     
+        // Find top edge
+        let image2 = image.clone();
+        let top_edge_handle = thread::spawn(move || Self::find_top_edge(&image2, threshold));
+
+        // Find left edge
+        let image3 = image.clone();
+        let left_edge_handle = thread::spawn(move || Self::find_left_edge(&image3, threshold));
+
+        // Find bottom edge
+        let image4 = image.clone();
+        let bottom_edge_handle = thread::spawn(move || Self::find_bottom_edge(&image4, threshold));
+    
+        // Find right edge
+        let image5 = image.clone();
+        let right_edge_handle = thread::spawn(move || Self::find_right_edge(&image5, threshold));
+
+        let top = top_edge_handle.join().unwrap();
+        let left = left_edge_handle.join().unwrap();
+        let bottom = bottom_edge_handle.join().unwrap();
+        let right = right_edge_handle.join().unwrap();
+
+        println!("LOG: {} {} {} {}", left, top, bottom, right);
+
+        if right < left {
+            return Err("provided image is completely black");
+        }
+
+        Ok(Self::crop_image(image, left, top, right - left + 1, bottom - top + 1))
+    }
 
 }
