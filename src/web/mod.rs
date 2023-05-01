@@ -1,27 +1,17 @@
 pub mod routes;
+pub mod util;
 
+use self::routes::*;
 use axum::{routing::post, Router};
-use serde::Serialize;
-
 use crate::neural::NeuralInferrer;
-use self::routes::{detect, distort, invert};
 
 pub fn routes(inferrer: NeuralInferrer) -> Router {
 	Router::new()
         .route("/detect", post(detect))
         .route("/distort", post(distort))
         .route("/invert", post(invert))
+        .route("/trim", post(trim))
+        .route("/rotate/:angle", post(rotate))
+        .route("/crop", post(crop))
         .with_state(inferrer)
-}
-
-#[derive(Serialize)]
-pub struct ImageResponse {
-    name: String,
-    data: Vec<u8>
-}
-
-impl ImageResponse {
-    pub fn new(name: String, data: Vec<u8>) -> Self {
-        Self { name, data }
-    }
 }
