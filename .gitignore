@@ -17,3 +17,7 @@ Cargo.lock
 data/*
 
 .DS_Store
+
+test_data/*
+
+.vs
