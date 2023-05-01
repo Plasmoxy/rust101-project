@@ -2,33 +2,21 @@ pub mod camera;
 pub mod core;
 pub mod images;
 pub mod neural;
+pub mod web;
 
-use std::time::Instant;
-
-use image::imageops::resize;
-use images::{draw_bboxes_on_image, load_image_buffer, processing::Processing, save_image_buffer};
+use std::net::SocketAddr;
 use neural::NeuralInferrer;
+use web::routes;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let inferrer = NeuralInferrer::new().await;
+    let inferrer = NeuralInferrer::new().await?;
 
-    let mut buf = load_image_buffer("girl.jpeg")?;
+    let routes = routes(inferrer);
+    let address = SocketAddr::from(([127, 0, 0, 1], 8080));
 
-    let bboxes = inferrer.infer_face(&buf);
-    println!("{:?}", bboxes);
-
-    let detected = draw_bboxes_on_image(
-        resize(&buf, buf.width() / 4, buf.height() / 4, image::imageops::FilterType::Triangle),
-        bboxes,
-    );
-    save_image_buffer("data/detected.jpg", &detected)?;
-
-    let wobble_t = Instant::now();
-    Processing::wobble(&mut buf);
-    println!("Wobble {:?}", wobble_t.elapsed());
-
-    save_image_buffer("data/out.jpg", &buf)?;
+    println!("->> LISTENING on {address}\n");
+    axum::Server::bind(&address).serve(routes.into_make_service()).await.unwrap();
 
     Ok(())
 }

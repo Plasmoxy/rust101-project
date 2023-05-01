@@ -154,7 +154,7 @@ impl UltrafaceModel {
         let (width, height) = variant.width_height();
         let input_fact = InferenceFact::dt_shape(f32::datum_type(), tvec!(1, 3, height as i32, width as i32));
 
-        println!("Befor load");
+        println!("Before load");
 
         let model = tract_onnx::onnx()
             .model_for_path(model_file_path)?

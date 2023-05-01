@@ -1,8 +1,10 @@
 pub mod processing;
 
 use std::time::Instant;
+use std::io::{BufWriter, Cursor};
 
-use image::{io::Reader as ImageReader, Rgb, RgbImage, Rgba, RgbaImage};
+use axum::extract::multipart::Field;
+use image::{io::Reader as ImageReader, load_from_memory, Rgb, RgbImage, Rgba, RgbaImage, ImageBuffer, ImageFormat};
 use imageproc::{
     drawing::{draw_hollow_rect, draw_text},
     rect::Rect,
@@ -12,12 +14,34 @@ use tract_onnx::tract_hir::tract_num_traits::ToPrimitive;
 pub fn load_image_buffer(path: &str) -> anyhow::Result<RgbImage> {
     let start = Instant::now();
     let img = ImageReader::open(path)?.decode()?;
-
+    
     let buf: RgbImage = img.into_rgb8(); // convert to rgb immediately
 
     println!("Loaded image {path} as {}x{} in {:?}", buf.width(), buf.height(), start.elapsed());
 
     Ok(buf)
+}
+
+pub async fn load_image_from_bytes(field: Field<'_>) -> anyhow::Result<(String, RgbImage)> {
+    let start = Instant::now();
+
+    let name = field.file_name().unwrap().to_string();
+    let data = field.bytes().await?;
+    let img = load_from_memory(&data)?;
+    let buf: RgbImage = img.into_rgb8(); // convert to rgb immediately
+
+    println!("Loaded image {name} as {}x{} in {:?}", buf.width(), buf.height(), start.elapsed());
+
+    Ok((name, buf))
+}
+
+pub fn get_image_as_bytes(data: ImageBuffer<Rgb<u8>, Vec<u8>>) -> anyhow::Result<Vec<u8>> {
+    let mut buffer = BufWriter::new(Cursor::new(Vec::new()));
+    
+    data.write_to(&mut buffer, ImageFormat::Jpeg)?;
+    let bytes: Vec<u8> = buffer.into_inner()?.into_inner();
+
+    Ok(bytes)
 }
 
 pub fn save_image_buffer(path: &str, buf: &RgbImage) -> anyhow::Result<()> {
