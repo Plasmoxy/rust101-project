@@ -22,7 +22,7 @@ pub fn load_image_buffer(path: &str) -> anyhow::Result<RgbImage> {
     Ok(buf)
 }
 
-pub async fn load_image_from_bytes(field: Field<'_>) -> anyhow::Result<(String, RgbImage)> {
+pub async fn load_image_from_bytes(field: Field<'_>) -> anyhow::Result<RgbImage> {
     let start = Instant::now();
 
     let name = field.file_name().unwrap().to_string();
@@ -30,9 +30,14 @@ pub async fn load_image_from_bytes(field: Field<'_>) -> anyhow::Result<(String, 
     let img = load_from_memory(&data)?;
     let buf: RgbImage = img.into_rgb8(); // convert to rgb immediately
 
-    println!("Loaded image {name} as {}x{} in {:?}", buf.width(), buf.height(), start.elapsed());
+    println!(
+        "Loaded image {name} as {}x{} in {:?}",
+        buf.width(),
+        buf.height(),
+        start.elapsed()
+    );
 
-    Ok((name, buf))
+    Ok(buf)
 }
 
 pub fn get_image_as_bytes(data: ImageBuffer<Rgb<u8>, Vec<u8>>) -> anyhow::Result<Vec<u8>> {
