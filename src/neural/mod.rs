@@ -1,5 +1,5 @@
-use std::time::Instant;
 use std::sync::{Arc, Mutex};
+use std::time::Instant;
 
 use image::RgbImage;
 
@@ -19,7 +19,7 @@ impl NeuralInferrer {
         let model = UltrafaceModel::new(UltrafaceVariant::W640H480, 0.5, 0.5).await.expect("Initialize model");
         let mutex = Mutex::new(model);
 
-		Ok(Self { model: Arc::new(mutex) })
+        Ok(Self { model: Arc::new(mutex) })
     }
 
     // Run Ultraface onnx neural model inference on a rgb image, return vec of bounding boxes and confidences of

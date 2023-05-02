@@ -1,8 +1,11 @@
-use image::{Pixel, RgbImage, Rgba, RgbaImage, ImageBuffer, Rgb};
-use tract_onnx::WithOnnx;
-use std::{cmp::{max, min}, thread};
+use image::{ImageBuffer, Pixel, Rgb, RgbImage, Rgba, RgbaImage};
 use rand::Rng;
 use rayon::prelude::*;
+use std::{
+    cmp::{max, min},
+    thread,
+};
+use tract_onnx::WithOnnx;
 
 pub struct Processing {}
 
@@ -72,33 +75,33 @@ impl Processing {
         let mut rotated_width = orig_width;
         let mut rotated_height = orig_height;
 
-        // in case the image is rotated on 90 or 270 degrees, 
+        // in case the image is rotated on 90 or 270 degrees,
         // the width and height will be swaped to remove black borders in the output image
-        if ((angle / 90.0) % 2.0) == 1.0{
+        if ((angle / 90.0) % 2.0) == 1.0 {
             rotated_width = orig_height;
             rotated_height = orig_width;
         }
 
         let mut rotated = ImageBuffer::new(rotated_width, rotated_height);
-    
+
         let sin_a = angle.to_radians().sin();
         let cos_a = angle.to_radians().cos();
-    
+
         let width_center = orig_width as f32 / 2.0;
         let height_center = orig_height as f32 / 2.0;
 
         for (x, y, pixel) in img.enumerate_pixels() {
-                // Compute the new position of the pixel in the rotated image 
-                // (rotation formulas were taken from https://homepages.inf.ed.ac.uk/rbf/HIPR2/rotate.htm)
-                let new_x = (cos_a * (x as f32 - width_center) - sin_a * (y as f32 - height_center) + rotated_width as f32 / 2.0) as u32;
-                let new_y = (sin_a * (x as f32 - width_center) + cos_a * (y as f32 - height_center) + rotated_height as f32 / 2.0) as u32;
-    
-                if new_x < rotated_width && new_y < rotated_height {
-                    // Copy the pixel from the original image to the rotated image
-                    rotated.put_pixel(new_x, new_y, pixel.to_rgb());
-                }
+            // Compute the new position of the pixel in the rotated image
+            // (rotation formulas were taken from https://homepages.inf.ed.ac.uk/rbf/HIPR2/rotate.htm)
+            let new_x = (cos_a * (x as f32 - width_center) - sin_a * (y as f32 - height_center) + rotated_width as f32 / 2.0) as u32;
+            let new_y = (sin_a * (x as f32 - width_center) + cos_a * (y as f32 - height_center) + rotated_height as f32 / 2.0) as u32;
+
+            if new_x < rotated_width && new_y < rotated_height {
+                // Copy the pixel from the original image to the rotated image
+                rotated.put_pixel(new_x, new_y, pixel.to_rgb());
+            }
         }
-    
+
         rotated
     }
 
@@ -180,7 +183,7 @@ impl Processing {
 
     pub fn remove_borders(image: &RgbImage) -> Result<RgbImage, &'static str> {
         let threshold = 40;
-    
+
         // Find top edge
         let image2 = image.clone();
         let top_edge_handle = thread::spawn(move || Self::find_top_edge(&image2, threshold));
@@ -192,7 +195,7 @@ impl Processing {
         // Find bottom edge
         let image4 = image.clone();
         let bottom_edge_handle = thread::spawn(move || Self::find_bottom_edge(&image4, threshold));
-    
+
         // Find right edge
         let image5 = image.clone();
         let right_edge_handle = thread::spawn(move || Self::find_right_edge(&image5, threshold));
@@ -210,5 +213,4 @@ impl Processing {
 
         Ok(Self::crop_image(image, left, top, right - left + 1, bottom - top + 1))
     }
-
 }

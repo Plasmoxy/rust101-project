@@ -4,8 +4,8 @@ pub mod images;
 pub mod neural;
 pub mod web;
 
-use std::net::SocketAddr;
 use neural::NeuralInferrer;
+use std::net::SocketAddr;
 use web::routes;
 
 #[tokio::main]

@@ -11,7 +11,12 @@ pub struct CropImage {
 
 impl CropImage {
     pub fn new() -> Self {
-        Self { x: None, y: None, width: None, height: None } 
+        Self {
+            x: None,
+            y: None,
+            width: None,
+            height: None,
+        }
     }
 
     pub fn is_valid(&self) -> bool {
