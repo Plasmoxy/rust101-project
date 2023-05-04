@@ -34,7 +34,7 @@ Following are the requirements we expected to fulfill during the implementation.
 
 # Design diagram
 
-![Untitled Diagram drawio](https://user-images.githubusercontent.com/31391787/236169369-9bc2811a-3de9-44d7-ab73-852265820d56.png)
+![diag](https://user-images.githubusercontent.com/31391787/236169858-c5ca644f-51fe-4305-b0d3-3e9ae4046802.png)
 
 # Design Choices
 
