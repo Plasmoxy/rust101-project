@@ -1,5 +1,5 @@
 
-# Final project report: [FINAL-REPORT.md][FINAL-REPORT.md]
+# Final project report: [FINAL-REPORT.md](FINAL-REPORT.md)
 
 
 This repository contains code and documentation for Rust 101 project - Sebastian Petrik (Plasmoxy#7521), Igor Durica (duricaigor#0164), Andrii Rybak (Kiligram#6228).
