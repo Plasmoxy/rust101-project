@@ -94,6 +94,13 @@ We were able to fulfill most of our project requirements. While the funcionality
 While we were able to succesfuly implement face recognition using an pretrained AI model in Rust. The resulting endpoint however takes some time for bigger photos. We suspect the problem may be with input
 representation preparation before feeding it into the model, thus more testing is needed.
 
+## Camera
+The main problem with camera was bad library support on M1 architecure - specifically the interoperation with Apple AVFoundation backend on M1 was broken. No library for Rust is currently available which has the issue resolved and the most popular library has this as an open unresolved issue. This made us wondering how ready is Rust ecosystem when it comes to some high level functionalities like this - what if our project really needs this but it just isn't implemented?
+Fixing this issue would require much more expertise and it would be probably easier to call a Python camera code from Rust.
+
+## Concurrency
+We used concurrency in our project, however during camera initialization implementation, it was interesting trying to convert callback-based funcitonality into async functionality. The MPSC channel and other variants (we had trouble with oneshot though because of moved values) have shown to be an interesting and useful mechanism for this problem.
+
 ## Axum
 
 Using Axum was a pleasant experience for the most part.
