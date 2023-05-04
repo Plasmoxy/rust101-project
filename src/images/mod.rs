@@ -30,12 +30,7 @@ pub async fn load_image_from_bytes(field: Field<'_>) -> anyhow::Result<RgbImage>
     let img = load_from_memory(&data)?;
     let buf: RgbImage = img.into_rgb8(); // convert to rgb immediately
 
-    println!(
-        "Loaded image {name} as {}x{} in {:?}",
-        buf.width(),
-        buf.height(),
-        start.elapsed()
-    );
+    println!("Loaded image {name} as {}x{} in {:?}", buf.width(), buf.height(), start.elapsed());
 
     Ok(buf)
 }
