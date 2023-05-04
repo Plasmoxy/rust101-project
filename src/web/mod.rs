@@ -7,6 +7,7 @@ use axum::{routing::post, Router};
 pub fn routes(inferrer: NeuralInferrer) -> Router {
     Router::new()
         .route("/detect", post(detect))
+        .route("/detect-bbox", post(detect_bbox))
         .route("/distort", post(distort))
         .route("/invert", post(invert))
         .route("/trim", post(trim))
