@@ -34,7 +34,7 @@ Following are the requirements we expected to fulfill during the implementation.
 
 # Design diagram
 
-![diag](https://user-images.githubusercontent.com/31391787/236169858-c5ca644f-51fe-4305-b0d3-3e9ae4046802.png)
+![aa](https://user-images.githubusercontent.com/31391787/236170236-36e676d7-ba10-490f-9028-457a282a3a22.png)
 
 # Design Choices
 
