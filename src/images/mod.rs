@@ -4,9 +4,9 @@ use std::io::{BufWriter, Cursor};
 use std::time::Instant;
 
 use axum::extract::multipart::Field;
-use image::{io::Reader as ImageReader, load_from_memory, ImageBuffer, ImageFormat, Rgb, RgbImage, Rgba, RgbaImage};
+use image::{io::Reader as ImageReader, load_from_memory, ImageBuffer, ImageFormat, Rgb, RgbImage};
 use imageproc::{
-    drawing::{draw_hollow_rect, draw_text},
+    drawing::{draw_hollow_rect},
     rect::Rect,
 };
 use tract_onnx::tract_hir::tract_num_traits::ToPrimitive;
@@ -57,9 +57,9 @@ pub fn save_image_buffer(path: &str, buf: &RgbImage) -> anyhow::Result<()> {
 pub fn draw_bboxes_on_image(mut frame: RgbImage, bboxes_with_confidences: Vec<([f32; 4], f32)>) -> RgbImage {
     let (width, height) = (frame.width().to_f32().unwrap(), frame.height().to_f32().unwrap());
 
-    let color = Rgb::from([0, 255, 0]);
+    let _color = Rgb::from([0, 255, 0]);
 
-    for (bbox, confidence) in bboxes_with_confidences.iter() {
+    for (bbox, _confidence) in bboxes_with_confidences.iter() {
         // Coordinates of top-left and bottom-right points
         // Coordinate frame basis is on the top left corner
         let (x_tl, y_tl) = (bbox[0] * width, bbox[1] * height);

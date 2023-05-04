@@ -5,7 +5,7 @@ use axum::{
 use axum_macros::debug_handler;
 use image::imageops::resize;
 use reqwest::{header::CONTENT_TYPE, StatusCode};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 
 use crate::images::{draw_bboxes_on_image, get_image_as_bytes, load_image_from_bytes};
 use crate::{images::processing::Processing, neural::NeuralInferrer};

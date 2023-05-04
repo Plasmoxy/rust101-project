@@ -2,10 +2,8 @@ use std::sync::{Arc, Mutex};
 
 use image::{ImageBuffer, Rgb};
 use nokhwa::{
-    nokhwa_initialize,
-    pixel_format::{RgbAFormat, RgbFormat},
-    query,
-    utils::{ApiBackend, CameraIndex, RequestedFormat, RequestedFormatType},
+    pixel_format::{RgbFormat},
+    utils::{CameraIndex, RequestedFormat, RequestedFormatType},
     Camera,
 };
 

@@ -1,28 +1,14 @@
-use image::{ImageBuffer, Pixel, Rgb, RgbImage, Rgba, RgbaImage};
+use image::{ImageBuffer, Pixel, Rgb, RgbImage};
 use rand::Rng;
 use rayon::prelude::*;
-use std::{
-    cmp::{max, min},
-    thread,
-};
-use tract_onnx::WithOnnx;
+use std::{cmp::min, thread};
 
 pub struct Processing {}
 
 impl Processing {
-    // TODO: DOESNT WORK, NO PARALEL ITERATOR FOR PIXELSKS? ???? -> can we implement par iter according to image lib?
-    fn inverto_bad<'a, P: Pixel + 'a>(pixels: impl rayon::iter::ParallelIterator<Item = (u32, u32, &'a mut P)>)
-    where
-        P::Subpixel: 'a,
-    {
-        pixels.for_each(|(x, y, px)| {
-            px.invert();
-        })
-    }
-
     // Basic negative directly through enumeration
     pub fn negative_basic(buf: &mut RgbImage) {
-        for (x, y, px) in buf.enumerate_pixels_mut() {
+        for (_x, _y, px) in buf.enumerate_pixels_mut() {
             // pixel.invert();
             // let slice = &mut px.0; // we can use directly the rgba enum
             px[0] = 255 - px[0];

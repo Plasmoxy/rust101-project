@@ -1,4 +1,4 @@
-use std::{error::Error, fs::File, io::Cursor};
+use std::{fs::File, io::Cursor};
 
 use reqwest::Client;
 
