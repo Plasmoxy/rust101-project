@@ -1,3 +1,5 @@
+# Final report
+
 This report serves as a summary for the final Rust 101 project written by - Sebastian Petrik (Plasmoxy#7521), Igor Durica (duricaigor#0164), Andrii Rybak (Kiligram#6228).
 
 # Introduction
