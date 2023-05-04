@@ -116,3 +116,6 @@ I was therefore left with no choice but to iterate over the individual fields in
 I am fully aware that this might 100% be due to user error or a general lack of knowledge of the framework.
 Regardless, I was able to find convenient workarounds through the use of query and route parameters which both work very well. 
 
+## Image manipulation
+There was tried to use Rayon for paralelism in image manipulation functions. However, there was used std::thread instead. In general, paralelism is a challenging field which requires deep knowledge, and, at the same time, it is not always applicable to the task. 
+The images are manupulated using RgbImage, which provides access to each pixel of the picture. 
