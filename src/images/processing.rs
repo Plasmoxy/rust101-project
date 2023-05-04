@@ -1,6 +1,5 @@
 use image::{ImageBuffer, Pixel, Rgb, RgbImage};
 use rand::Rng;
-use rayon::prelude::*;
 use std::{cmp::min, thread};
 
 pub struct Processing {}
